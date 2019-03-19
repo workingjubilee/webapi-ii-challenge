@@ -111,6 +111,39 @@ router.put('/:id', async (req, res) => {
 });
 
 // cruD
-router.delete('/');
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedPost = await Posts.findById(id);
+
+    if (deletedPost) {
+
+      try {
+        const postDeletion = await Posts.remove(id);
+
+        postDeletion
+        ? res.status(206).json(deletedPost)
+        : res.status(500).json({ error: "The post could not be removed." })
+
+      } catch {
+        res.status(500).json({
+          error: "The post could not be removed."
+        })
+      }
+
+    } else {
+      res.status(404).json({
+        message: "The post with the specified ID does not exist."
+      })
+    }
+
+  } catch(error) {
+    res.status(500).json({
+      error: "Error while finding the post."
+    })
+  }
+
+});
 
 module.exports = router;
