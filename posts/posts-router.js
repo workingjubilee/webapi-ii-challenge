@@ -89,7 +89,7 @@ router.put('/:id', async (req, res) => {
     try {
       const post = await Posts.update(id, { title, contents });
 
-      if (post) {
+      if (post.length > 0) {
         res.status(200).json(post);
       } else {
         res.status(404).json({
